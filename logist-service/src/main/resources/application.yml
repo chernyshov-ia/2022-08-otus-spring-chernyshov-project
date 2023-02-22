@@ -1,0 +1,42 @@
+application:
+  jwt:
+    secret:
+      access: WatZfMdaiqiM0lg10Fi/fNzTZ4dOLzq8V+w9COMGBtQPtcype3dnI9V+9SaG9sSyCA+vWfQs3sa/yAov2OqAkQ==
+
+
+server:
+  port: 8082
+spring:
+  flyway:
+    enabled: false
+  datasource:
+    url: "jdbc:postgresql://localhost:5433/logist"
+    password: postgres
+    username: postgres
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+
+logging:
+  file:
+    name: "logist.log"
+  level:
+    org:
+      springframework:
+        web: trace
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,logfile,metrics"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      external-file: "logist.log"
+

@@ -11,6 +11,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>auth-server</module>
+        <module>auth-service</module>
+        <module>logist-service</module>
+        <module>vnp-service</module>
+        <module>security</module>
     </modules>
 </project>
