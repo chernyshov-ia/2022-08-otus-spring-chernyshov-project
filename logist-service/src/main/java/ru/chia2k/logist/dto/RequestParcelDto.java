@@ -31,6 +31,9 @@ public class RequestParcelDto {
     @DecimalMin(value = "0.05", message = "Вес посылки не может быть меньше 50 грамм")
     private final BigDecimal weight;
 
+    @NotNull(message = "Категория груза должна быть указана")
+    private final Integer cargoCategoryId;
+
     @NotBlank(message = "Для посылки требуется описание(содержимое, получатель, кабинет, контактная информация)")
     private final String description;
 }

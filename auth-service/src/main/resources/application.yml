@@ -9,6 +9,7 @@ application:
 
 server:
   port: 8081
+  address:
 spring:
   flyway:
     enabled: true
@@ -22,7 +23,8 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
-
+  application:
+    name: auth-service
 
 logging:
   file:
@@ -36,10 +38,21 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,logfile,metrics"
+        include: "*"
   endpoint:
     health:
       show-details: always
     logfile:
       external-file: "auth.log"
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+    register-with-eureka: true
+    fetch-registry: false
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true

@@ -38,11 +38,16 @@ public class Parcel {
     @Fetch(FetchMode.JOIN)
     private Address recipient;
 
+    @ManyToOne(cascade = CascadeType.PERSIST, optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "cargo_category_id")
+    @Fetch(FetchMode.JOIN)
+    private CargoCategory cargoCategory;
+
     @Column(name = "descr")
     private String description;
 
     @Column(name = "ctime")
-    private LocalDateTime creationDate;
+    private LocalDateTime createdAt;
 
     @Column(name = "volume", columnDefinition = "Float8")
     private BigDecimal volume;

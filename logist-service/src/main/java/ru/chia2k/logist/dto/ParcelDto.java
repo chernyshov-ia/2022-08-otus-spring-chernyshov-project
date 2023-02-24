@@ -18,10 +18,11 @@ public class ParcelDto {
     private final String barcode;
     private final AddressDto sender;
     private final AddressDto recipient;
+    private final CargoCategoryDto cargoCategory;
     private final String description;
     private final BigDecimal volume;
     private final BigDecimal weight;
-    private final LocalDateTime creationDate;
+    private final LocalDateTime createdAt;
 
     public static ParcelDto fromDomainObject( Parcel parcel ) {
         return ParcelDto.builder()
@@ -32,9 +33,10 @@ public class ParcelDto {
                 .description(parcel.getDescription())
                 .volume(parcel.getVolume())
                 .weight(parcel.getWeight())
-                .creationDate(parcel.getCreationDate())
+                .createdAt(parcel.getCreatedAt())
                 .sender(AddressDto.fromDomainObject(parcel.getSender()))
                 .recipient(AddressDto.fromDomainObject(parcel.getRecipient()))
+                .cargoCategory(CargoCategoryDto.fromDomainObject(parcel.getCargoCategory()))
                 .build();
     }
 }

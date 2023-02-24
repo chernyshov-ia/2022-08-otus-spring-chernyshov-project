@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Authentication server API",
+                title = "Authentication service API",
                 description = "Authentication server", version = "1.0.0",
                 contact = @Contact(name = "Chernyshov Igor",email = "igorchernyshov@yandex.ru")
         )

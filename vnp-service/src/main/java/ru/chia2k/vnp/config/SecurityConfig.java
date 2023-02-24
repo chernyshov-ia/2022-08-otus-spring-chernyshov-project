@@ -1,4 +1,4 @@
-package ru.chia2k.logist.config;
+package ru.chia2k.vnp.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +25,6 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                                .requestMatchers("/api/v1/addresses").permitAll()
-                                .requestMatchers("/api/v1/cargoCategory").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class)

@@ -3,14 +3,14 @@ application:
     secret:
       access: WatZfMdaiqiM0lg10Fi/fNzTZ4dOLzq8V+w9COMGBtQPtcype3dnI9V+9SaG9sSyCA+vWfQs3sa/yAov2OqAkQ==
 
-
 server:
-  port: 8082
+  port: 8083
+
 spring:
   flyway:
     enabled: false
   datasource:
-    url: "jdbc:postgresql://localhost:5433/logist"
+    url: "jdbc:postgresql://localhost:5434/vnp"
     password: postgres
     username: postgres
   jpa:
@@ -19,16 +19,18 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+
   application:
-    name: logistics-service
+    name: vnp-service
+
 
 logging:
   file:
-    name: "logist.log"
+    name: "vnp.log"
   level:
     org:
       springframework:
-        web: warn
+        web: trace
 
 management:
   endpoints:
@@ -39,14 +41,14 @@ management:
     health:
       show-details: always
     logfile:
-      external-file: "logist.log"
+      external-file: "vnp.log"
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8888/eureka
     register-with-eureka: true
-    fetch-registry: false
+    fetch-registry: true
   instance:
     lease-renewal-interval-in-seconds: 30
     lease-expiration-duration-in-seconds: 90

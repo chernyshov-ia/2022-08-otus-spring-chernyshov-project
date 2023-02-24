@@ -15,5 +15,6 @@
         <module>logist-service</module>
         <module>vnp-service</module>
         <module>security</module>
+        <module>eureka-service</module>
     </modules>
 </project>

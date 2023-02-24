@@ -1,11 +1,11 @@
-package ru.chia2k.vnp;
+package ru.chia2k.servicediscovery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VnpServiceApplication {
+public class EurekaServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(VnpServiceApplication.class, args);
+        SpringApplication.run(EurekaServiceApplication.class, args);
     }
 }
