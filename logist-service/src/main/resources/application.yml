@@ -1,54 +1,5 @@
-application:
-  jwt:
-    secret:
-      access: WatZfMdaiqiM0lg10Fi/fNzTZ4dOLzq8V+w9COMGBtQPtcype3dnI9V+9SaG9sSyCA+vWfQs3sa/yAov2OqAkQ==
-
-
-server:
-  port: 8082
 spring:
-  flyway:
-    enabled: false
-  datasource:
-    url: "jdbc:postgresql://localhost:5433/logist"
-    password: postgres
-    username: postgres
-  jpa:
-    generate-ddl: false
-    show-sql: true
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
   application:
     name: logistics-service
-
-logging:
-  file:
-    name: "logist.log"
-  level:
-    org:
-      springframework:
-        web: warn
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-    logfile:
-      external-file: "logist.log"
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8888/eureka
-    register-with-eureka: true
-    fetch-registry: false
-  instance:
-    lease-renewal-interval-in-seconds: 30
-    lease-expiration-duration-in-seconds: 90
-    instance-id: ${spring.application.name}:${server.port}
-    prefer-ip-address: true
+  config:
+    import: configserver:http://root:lOjdxpPvm21m@localhost:8999

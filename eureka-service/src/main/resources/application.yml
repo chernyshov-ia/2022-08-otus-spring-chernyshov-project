@@ -1,28 +1,5 @@
 spring:
   application:
     name: eureka-server
-
-server:
-  port: 8888
-
-eureka:
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-    service-url:
-      defaultZone: http://localhost:8888/eureka
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-    logfile:
-      external-file: "sd.log"
-
-logging:
-  file:
-    name: "sd.log"
+  config:
+    import: configserver:http://root:lOjdxpPvm21m@localhost:8999

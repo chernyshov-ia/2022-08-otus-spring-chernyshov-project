@@ -1,0 +1,35 @@
+server:
+  port: 8999
+spring:
+  security:
+    user:
+      name: root
+      password: lOjdxpPvm21m
+  application:
+    name: configuration-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:./configs/{application}
+        encrypt:
+          enabled: false
+
+logging:
+  file:
+    name: "config-server.log"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-origins: "*"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      external-file: "config-server.log"

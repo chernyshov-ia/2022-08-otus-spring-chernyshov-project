@@ -1,0 +1,53 @@
+application:
+  jwt:
+    secret:
+      access: WatZfMdaiqiM0lg10Fi/fNzTZ4dOLzq8V+w9COMGBtQPtcype3dnI9V+9SaG9sSyCA+vWfQs3sa/yAov2OqAkQ==
+
+server:
+  port: 8083
+
+spring:
+  flyway:
+    enabled: false
+  datasource:
+    url: "jdbc:postgresql://localhost:5434/vnp"
+    password: postgres
+    username: postgres
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  application:
+    name: vnp-service
+
+logging:
+  file:
+    name: "vnp.log"
+  level:
+    org.springframework.web: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      external-file: "vnp.log"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
