@@ -16,5 +16,6 @@
         <module>vnp-service</module>
         <module>security</module>
         <module>eureka-service</module>
+        <module>gateway-service</module>
     </modules>
 </project>

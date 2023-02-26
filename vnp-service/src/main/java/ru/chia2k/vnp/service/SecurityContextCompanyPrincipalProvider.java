@@ -30,7 +30,7 @@ public class SecurityContextCompanyPrincipalProvider implements CompanyPrincipal
                 return builder.accountNumber(Integer.valueOf((String) principal.getAccountNumber())).build();
             }
         } catch (NumberFormatException e) {
-            throw new CompanyPrincipalException("Possibly user is not company employee", e);
+            throw new CompanyPrincipalException("Possibly user is not company employee");
         }
 
         return null;

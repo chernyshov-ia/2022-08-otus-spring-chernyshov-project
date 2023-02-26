@@ -47,11 +47,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void createParcel(Order order) {
+        String description = combineDescription(order);
+
         RequestParcelDto request = RequestParcelDto.builder()
                 .seal(order.getSeal())
                 .recipientId(order.getRecipient().getCode())
                 .senderId(order.getSender().getCode())
-                .description(order.getDescription())
+                .description(description)
                 .cargoCategoryId(order.getCargoCategoryId())
                 .volume(order.getVolume())
                 .weight(order.getWeight())
@@ -64,36 +66,32 @@ public class OrderServiceImpl implements OrderService {
         order.setParcelBarcode(parcel.getBarcode());
     }
 
-    private String getRecipientPersonText(OrderRecipientPersonDto person) {
-        if (person == null)
-            return "";
-
+    private String getRecipientPersonText(Order order) {
         var sb = new StringBuilder();
 
-        if (person.name() != null && !"".equals(person.name().trim())) {
+        if (order.getRecipientPersonName() != null && !"".equals(order.getRecipientPersonName().trim())) {
             sb.append("Получатель: ");
-            sb.append(person.name());
+            sb.append(order.getRecipientPersonName());
 
-            if (person.phone() != null && !"".equals(person.phone().trim())) {
+            if (order.getRecipientPersonPhone() != null && !"".equals(order.getRecipientPersonPhone().trim())) {
                 sb.append(", тел. ");
-                sb.append(person.phone());
+                sb.append(order.getRecipientPersonPhone());
             }
-        } else if (person.phone() != null && !"".equals(person.phone().trim())) {
+        } else if (order.getRecipientPersonPhone() != null && !"".equals(order.getRecipientPersonPhone().trim())) {
             sb.append("Телефон получателя: ");
-            sb.append(person.phone());
+            sb.append(order.getRecipientPersonPhone());
         }
-
         return sb.toString();
     }
 
-    private String combineDescription(RequestOrderDto request) {
+    private String combineDescription(Order order) {
         var sb = new StringBuilder();
-        var personText = getRecipientPersonText(request.getRecipientPerson());
+        var personText = getRecipientPersonText(order);
         if (!"".equals(personText)) {
             sb.append(personText);
             sb.append("; ");
         }
-        sb.append(request.getDescription());
+        sb.append(order.getDescription());
         return sb.toString();
     }
 
@@ -109,15 +107,13 @@ public class OrderServiceImpl implements OrderService {
         AddressDto recipient = logisticsProxy.getAddresses(request.getRecipientId())
                 .orElseThrow(() -> new ObjectNotFoundException("recipientId", request.getRecipientId()));
 
-        String description = combineDescription(request);
-
         Order order = new Order();
         order.setSender(createOrderAddressEntity(sender));
         order.setRecipient(createOrderAddressEntity(recipient));
         order.setSeal(request.getSeal());
         order.setCargoCategoryId(cargoCategory.id());
         order.setCargoCategoryName(cargoCategory.name());
-        order.setDescription(description);
+        order.setDescription(request.getDescription());
         order.setUserCommentText(request.getUserCommentText());
         order.setUserId(principal.getAccountNumber());
         order.setUserName(principal.getFullName());
