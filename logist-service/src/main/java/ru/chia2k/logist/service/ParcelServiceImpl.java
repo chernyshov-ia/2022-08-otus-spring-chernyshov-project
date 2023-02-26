@@ -51,6 +51,7 @@ public class ParcelServiceImpl implements ParcelService{
         parcel.setSeal(dto.getSeal());
         parcel.setVolume(dto.getVolume());
         parcel.setWeight(dto.getWeight());
+        parcel.setValue(dto.getValue());
         parcel.setDescription(dto.getDescription());
         parcel.setSender(sender);
         parcel.setRecipient(recipient);

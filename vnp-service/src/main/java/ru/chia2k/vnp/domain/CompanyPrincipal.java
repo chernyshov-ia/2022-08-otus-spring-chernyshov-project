@@ -1,23 +1,19 @@
-package ru.chia2k.security.client.authentication;
-
+package ru.chia2k.vnp.domain;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.chia2k.security.client.principal.CommonPrincipal;
 
-
 @RequiredArgsConstructor
-@Builder
 @Getter
-public class JwtPrincipal implements CommonPrincipal {
-    private final String accountNumber;
+@Builder
+public class CompanyPrincipal implements CommonPrincipal {
+    private final Integer accountNumber;
     private final String firstName;
     private final String lastName;
     private final String patronymic;
     private final String email;
-    private final String positionCode;
-    private final String positionName;
 
     public String getFullName() {
         return lastName + " " + firstName + (patronymic != null ? (" " + patronymic) : "");

@@ -1,7 +1,7 @@
 application:
   jwt:
     token-count-limit: 3
-    access-token-lifetime-seconds: 1200
+    access-token-lifetime-seconds: 3600
     refresh-token-lifetime-days: 30
     secret:
       access: WatZfMdaiqiM0lg10Fi/fNzTZ4dOLzq8V+w9COMGBtQPtcype3dnI9V+9SaG9sSyCA+vWfQs3sa/yAov2OqAkQ==

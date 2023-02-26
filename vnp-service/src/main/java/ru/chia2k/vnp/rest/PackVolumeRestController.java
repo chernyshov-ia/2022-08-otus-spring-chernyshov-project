@@ -23,7 +23,7 @@ public class PackVolumeRestController {
     ResponseEntity<PackVolumeDto> getObject(@PathVariable(name = "id") Integer id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @PutMapping("api/v1/packVolume/{id}")

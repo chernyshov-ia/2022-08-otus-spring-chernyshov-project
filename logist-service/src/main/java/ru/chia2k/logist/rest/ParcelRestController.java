@@ -20,7 +20,7 @@ public class ParcelRestController {
     public ResponseEntity<ParcelDto> getParcel(@NonNull @PathVariable("id") Integer id) {
         return parcelService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @GetMapping("api/v1/parcel")

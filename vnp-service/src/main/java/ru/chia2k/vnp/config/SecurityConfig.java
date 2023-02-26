@@ -8,8 +8,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.chia2k.security.client.filter.JwtFilter;
+import ru.chia2k.security.client.service.CommonPrincipalProvider;
 import ru.chia2k.security.client.service.JwtValidator;
 import ru.chia2k.security.client.service.JwtValidatorImpl;
+import ru.chia2k.security.client.service.SecurityContextPrincipalProvider;
 
 
 @Configuration
@@ -37,9 +39,13 @@ public class SecurityConfig {
         return new JwtValidatorImpl(jwtAccessSecret);
     }
 
-
     @Bean
     public JwtFilter jwtFilter(JwtValidator jwtValidator) {
         return new JwtFilter(jwtValidator);
+    }
+
+    @Bean
+    public CommonPrincipalProvider principalProvider() {
+        return new SecurityContextPrincipalProvider();
     }
 }

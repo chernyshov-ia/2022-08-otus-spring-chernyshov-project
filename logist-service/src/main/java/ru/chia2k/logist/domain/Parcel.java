@@ -2,6 +2,7 @@ package ru.chia2k.logist.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -46,6 +47,7 @@ public class Parcel {
     @Column(name = "descr")
     private String description;
 
+    @CreationTimestamp
     @Column(name = "ctime")
     private LocalDateTime createdAt;
 
@@ -54,4 +56,7 @@ public class Parcel {
 
     @Column(name = "weight", columnDefinition = "Float8")
     private BigDecimal weight;
+
+    @Column(name = "value", columnDefinition = "numeric(12,2)")
+    private BigDecimal value;
 }

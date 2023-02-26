@@ -22,6 +22,7 @@ public class ParcelDto {
     private final String description;
     private final BigDecimal volume;
     private final BigDecimal weight;
+    private final BigDecimal value;
     private final LocalDateTime createdAt;
 
     public static ParcelDto fromDomainObject( Parcel parcel ) {
@@ -33,6 +34,7 @@ public class ParcelDto {
                 .description(parcel.getDescription())
                 .volume(parcel.getVolume())
                 .weight(parcel.getWeight())
+                .value(parcel.getValue())
                 .createdAt(parcel.getCreatedAt())
                 .sender(AddressDto.fromDomainObject(parcel.getSender()))
                 .recipient(AddressDto.fromDomainObject(parcel.getRecipient()))
