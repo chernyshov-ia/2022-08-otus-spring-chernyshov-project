@@ -4,8 +4,8 @@ application:
     access-token-lifetime-seconds: 3600
     refresh-token-lifetime-days: 30
     secret:
-      access: WatZfMdaiqiM0lg10Fi/fNzTZ4dOLzq8V+w9COMGBtQPtcype3dnI9V+9SaG9sSyCA+vWfQs3sa/yAov2OqAkQ==
-      refresh: F3v7My41GWbnWC03tEjqLbVd8HRwxAkDDI4sx9qbgUQdFnjqx3S+2qKjStrXaOg/0ljPgrwu7Q3JWORri/3vpA==
+      access: "{cipher}faa58bd74c24525535b74651a61a715445e29b33e57a04d14e879865b4d8844b1c7f671660ba182ab2f11b95daef0e5f4295c4b3d40f72f8a5445b1f7fa37084df92389b33f30a0b809a0f73977fc14779b89bce9dba56e0ae51f6b4f35ef393072f308c78a15ff95282c8c3156352b3"
+      refresh: "{cipher}eef8f639f70a0769e8e93d4024cbd5a28a5177035f2d73b6610e8bd6cf88ea109306a504a505fa4b45f161851e11e3ec91b00881d516c0efc61f97a81c2c68d44dc1e746d1ead9df3382c3a1ddf113606c5cdd773b4a21210b3d070bf62a379e966235ecb3d87f23e26fb8fa778917ea"
 
 server:
   port: 8081
@@ -14,8 +14,8 @@ spring:
     enabled: true
   datasource:
     url: "jdbc:postgresql://localhost:5432/auth"
-    password: postgres
-    username: postgres
+    password: "{cipher}3e26fb500892ec6cb6255292beb47a1d393a905b5a2d557492ff857dabfed74b"
+    username: "{cipher}3e26fb500892ec6cb6255292beb47a1d393a905b5a2d557492ff857dabfed74b"
   jpa:
     generate-ddl: false
     show-sql: true
@@ -39,6 +39,13 @@ management:
       show-details: always
     logfile:
       external-file: "auth.log"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
 
 eureka:
   client:

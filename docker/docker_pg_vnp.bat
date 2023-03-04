@@ -1,1 +1,0 @@
-docker run --rm --name pg-vnp  -d -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=vnp -p 5434:5432 postgres:14

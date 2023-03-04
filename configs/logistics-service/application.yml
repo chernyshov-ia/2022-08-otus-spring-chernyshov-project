@@ -1,7 +1,7 @@
 application:
   jwt:
     secret:
-      access: WatZfMdaiqiM0lg10Fi/fNzTZ4dOLzq8V+w9COMGBtQPtcype3dnI9V+9SaG9sSyCA+vWfQs3sa/yAov2OqAkQ==
+      access: "{cipher}faa58bd74c24525535b74651a61a715445e29b33e57a04d14e879865b4d8844b1c7f671660ba182ab2f11b95daef0e5f4295c4b3d40f72f8a5445b1f7fa37084df92389b33f30a0b809a0f73977fc14779b89bce9dba56e0ae51f6b4f35ef393072f308c78a15ff95282c8c3156352b3"
 
 server:
   port: 8082
@@ -10,8 +10,8 @@ spring:
     enabled: true
   datasource:
     url: "jdbc:postgresql://localhost:5433/logist"
-    password: postgres
-    username: postgres
+    password: "{cipher}3e26fb500892ec6cb6255292beb47a1d393a905b5a2d557492ff857dabfed74b"
+    username: "{cipher}3e26fb500892ec6cb6255292beb47a1d393a905b5a2d557492ff857dabfed74b"
   jpa:
     generate-ddl: false
     show-sql: true
@@ -41,6 +41,14 @@ management:
       show-details: always
     logfile:
       external-file: "logist.log"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+
 
 eureka:
   client:

@@ -15,7 +15,7 @@ spring:
         native:
           search-locations: file:./configs/{application}
         encrypt:
-          enabled: false
+          enabled: true
 
 logging:
   file:
@@ -33,3 +33,6 @@ management:
       show-details: always
     logfile:
       external-file: "config-server.log"
+
+encrypt:
+  key: "APgfkwODNU3093r2rbjzxcn09u213asdhy08WRFH:"

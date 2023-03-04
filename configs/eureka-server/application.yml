@@ -18,6 +18,13 @@ management:
       show-details: always
     logfile:
       external-file: "sd.log"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
 
 logging:
   file:

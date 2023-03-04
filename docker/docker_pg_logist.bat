@@ -1,1 +1,0 @@
-docker run --rm --name pg-logist  -d -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=logist -p 5433:5432 postgres:14

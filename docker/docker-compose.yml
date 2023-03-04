@@ -1,0 +1,77 @@
+version: '3'
+services:
+  pg-auth:
+    image: "postgres:14"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=auth
+    networks:
+      - nw
+
+  pg-logist:
+    image: "postgres:14"
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=logist
+    networks:
+      - nw
+
+  pg-vnp:
+    image: "postgres:14"
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=vnp
+    networks:
+      - nw
+
+  rabbitmq:
+    image: "rabbitmq:3.9.28-management-alpine"
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    networks:
+      - nw
+
+  prometheus:
+    image: 'prom/prometheus'
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+    networks:
+      nw:
+        aliases:
+          - prometheus
+
+  grafana:
+    build: './config/grafana'
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      nw:
+        aliases:
+          - grafana
+
+networks:
+  nw:
+
+

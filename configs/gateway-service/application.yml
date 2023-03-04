@@ -27,10 +27,18 @@ spring:
           uri: lb://logistics-service
           predicates:
             - Method=GET
-            - Path=/api/address/**,/api/cargocategory/**
+            - Path=/api/address/**,/api/cargocategory/**,/api/parcel/**
           filters:
             - RewritePath=/api/address(?<segment>/?.*), /api/v1/address$\{segment}
             - RewritePath=/api/cargocategory(?<segment>/?.*), /api/v1/cargoCategory$\{segment}
+            - RewritePath=/api/parcel(?<segment>/?.*), /api/v1/parcel$\{segment}
+        - id: route_barcodes
+          uri: lb://logistics-service
+          predicates:
+            - Method=GET
+            - Path=/api/barcode
+          filters:
+            - RewritePath=/api/barcode, /barcode
         - id: route_vnp
           uri: lb://vnp-service
           predicates:
@@ -62,6 +70,14 @@ management:
       show-details: always
     logfile:
       external-file: "gateway.log"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+
 
 eureka:
   client:

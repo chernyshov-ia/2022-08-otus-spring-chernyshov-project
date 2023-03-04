@@ -1,1 +1,0 @@
-docker run --rm --name pg-auth  -d -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=auth -p 5432:5432 postgres:14
