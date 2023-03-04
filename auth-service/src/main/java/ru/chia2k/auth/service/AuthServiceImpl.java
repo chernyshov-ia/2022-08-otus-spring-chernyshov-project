@@ -1,5 +1,8 @@
 package ru.chia2k.auth.service;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final AppRepository appRepository;
     private final PasswordEncoder passwordEncoder;
     private final Object lockApps = new Object();
+
     private volatile Set<String> apps;
 
     public AuthServiceImpl(
@@ -51,6 +55,9 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @CircuitBreaker(name = "authServiceCircuitBreaker")
+    @Bulkhead(name="authServiceBulkhead")
+    @RateLimiter(name = "authServiceRateLimiter")
     @Transactional
     @Override
     public JwtResponse login(@NonNull JwtRequest authRequest) {
@@ -95,6 +102,8 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @CircuitBreaker(name = "authServiceCircuitBreaker")
+    @Bulkhead(name="authServiceBulkhead")
     @Transactional(readOnly = true)
     @Override
     public JwtTokenResponse getNewAccessToken(@NonNull String refreshToken) {
@@ -129,6 +138,9 @@ public class AuthServiceImpl implements AuthService {
         return JwtTokenResponse.builder().build();
     }
 
+    @CircuitBreaker(name = "authServiceCircuitBreaker")
+    @Bulkhead(name="authServiceBulkhead")
+    @RateLimiter(name = "authServiceRateLimiter")
     @Transactional
     @Override
     public JwtResponse refresh(@NonNull String currentRefreshToken) {
