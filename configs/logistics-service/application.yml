@@ -7,7 +7,7 @@ server:
   port: 8082
 spring:
   flyway:
-    enabled: false
+    enabled: true
   datasource:
     url: "jdbc:postgresql://localhost:5433/logist"
     password: postgres
@@ -18,12 +18,18 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+  rabbitmq:
+    host: localhost
+    username: user
+    password: password
+    port: 5672
 
 logging:
   file:
     name: "logist.log"
   level:
     org.springframework.web: warn
+    ru.chia2k: trace
 
 management:
   endpoints:

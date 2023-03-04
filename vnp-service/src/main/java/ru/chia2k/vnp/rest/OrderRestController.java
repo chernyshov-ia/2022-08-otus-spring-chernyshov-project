@@ -14,7 +14,7 @@ public class OrderRestController {
 
     @PostMapping("/api/v1/order")
     OrderDto createOrder(@RequestBody RequestOrderDto request) {
-        return orderService.create(request);
+        return orderService.createAndNotifyByEmail(request);
     }
 
     @GetMapping("/api/v1/order/{id}")

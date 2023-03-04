@@ -8,7 +8,7 @@ server:
 
 spring:
   flyway:
-    enabled: false
+    enabled: true
   datasource:
     url: "jdbc:postgresql://localhost:5434/vnp"
     password: postgres
@@ -19,15 +19,31 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
-
+  rabbitmq:
+    host: localhost
+    username: user
+    password: password
+    port: 5672
   application:
     name: vnp-service
+  mail:
+    from: igorchernyshov@yandex.ru
+    host: smtp.yandex.ru
+    port: 587
+    username: igorchernyshov
+    password: rnpbrvcvibqolvro
+    protocol: smtp
+    properties:
+      "mail.transport.protocol": smtp
+      "mail.smtp.auth": true
+      "mail.smtp.starttls.enable": true
 
 logging:
   file:
     name: "vnp.log"
   level:
     org.springframework.web: TRACE
+    ru.chia2k: trace
 
 management:
   endpoints:

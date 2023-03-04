@@ -1,6 +1,7 @@
 package ru.chia2k.vnp.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -14,19 +15,35 @@ import ru.chia2k.vnp.repository.OrderRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 
 @Service
 @RequiredArgsConstructor
 @Validated
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CompanyPrincipalProvider principalProvider;
-    private final LogisticsServiceProxy logisticsProxy;
+    private final LogisticsServiceProxy logisticsServiceProxy;
+    private final TicketService ticketService;
+    private final OrdersMailService mailService;
+    private final ExecutorService executorService = ForkJoinPool.commonPool();
 
     @Override
     public Optional<OrderDto> findByIdForCurrentUser(Integer id) {
         var accountNumber = principalProvider.getPrincipal().getAccountNumber();
         return orderRepository.findByIdAndUserId(id, accountNumber).map(OrderDto::from);
+    }
+
+    @Override
+    public Optional<OrderDto> findById(Integer id) {
+        return orderRepository.findById(id).map(OrderDto::from);
+    }
+
+    @Override
+    public Optional<OrderDto> findByParcelId(Integer parcelId) {
+        return orderRepository.findFirstByParcelId(parcelId).map(OrderDto::from);
     }
 
     @Override
@@ -41,12 +58,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto create(RequestOrderDto request) {
         Order order = createOrderEntity(request);
         order = orderRepository.saveAndFlush(order);
-        createParcel(order);
+        createParcelAndUpdateOrderEntity(order);
         order = orderRepository.save(order);
         return OrderDto.from(order);
     }
 
-    private void createParcel(Order order) {
+    private void createParcelAndUpdateOrderEntity(Order order) {
         String description = combineDescription(order);
 
         RequestParcelDto request = RequestParcelDto.builder()
@@ -60,10 +77,33 @@ public class OrderServiceImpl implements OrderService {
                 .value(order.getValue())
                 .build();
 
-        ParcelDto parcel = logisticsProxy.postParcel(request);
+        ParcelDto parcel = logisticsServiceProxy.postParcel(request);
 
         order.setParcelId(parcel.getId());
         order.setParcelBarcode(parcel.getBarcode());
+    }
+
+    @Override
+    public OrderDto createAndNotifyByEmail(RequestOrderDto request) {
+        final OrderDto order = create(request);
+        log.debug("Создаем задачу на уведомение по новому заказу {}", order.getId());
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                mailService.sendNotifyNewOrder(order);
+            }
+        });
+
+        final Integer parcelId = order.getParcel().id();
+        log.debug("Создаем задачу на запрос этикетки по parcelId = {}", parcelId);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                ticketService.sendRequestTicket(parcelId);
+            }
+        });
+
+        return order;
     }
 
     private String getRecipientPersonText(Order order) {
@@ -98,13 +138,13 @@ public class OrderServiceImpl implements OrderService {
     private Order createOrderEntity(RequestOrderDto request) {
         var principal = principalProvider.getPrincipal();
 
-        CargoCategoryDto cargoCategory = logisticsProxy.getCargoCategory(request.getCargoCategoryId())
+        CargoCategoryDto cargoCategory = logisticsServiceProxy.getCargoCategory(request.getCargoCategoryId())
                 .orElseThrow(() -> new ObjectNotFoundException("cargoCategoryId", request.getCargoCategoryId().toString()));
 
-        AddressDto sender = logisticsProxy.getAddresses(request.getSenderId())
+        AddressDto sender = logisticsServiceProxy.getAddresses(request.getSenderId())
                 .orElseThrow(() -> new ObjectNotFoundException("senderId", request.getSenderId()));
 
-        AddressDto recipient = logisticsProxy.getAddresses(request.getRecipientId())
+        AddressDto recipient = logisticsServiceProxy.getAddresses(request.getRecipientId())
                 .orElseThrow(() -> new ObjectNotFoundException("recipientId", request.getRecipientId()));
 
         Order order = new Order();

@@ -27,6 +27,7 @@ public class SecurityConfig {
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                                 .requestMatchers("/api/v1/addresses").permitAll()
                                 .requestMatchers("/api/v1/cargoCategory").permitAll()
+                                .requestMatchers("/barcode/**").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class)

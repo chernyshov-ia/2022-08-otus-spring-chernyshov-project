@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByUserIdAndCreatedAtBetween(Integer userId, LocalDateTime from, LocalDateTime to);
     Optional<Order> findByIdAndUserId(Integer id, Integer userId);
+    Optional<Order> findFirstByParcelId(Integer parcelId);
+
 }
