@@ -31,7 +31,7 @@ spring:
     host: smtp.yandex.ru
     port: 587
     username: che.robot
-    password: "{cipher}7032c0ea2655514107eb3257d4dca21c1f8aab0442ae72b56ae974fdfd4ed679b2f78747ec716d036da0c009b4b07d35"
+    password: secret
     protocol: smtp
     properties:
       "mail.transport.protocol": smtp
