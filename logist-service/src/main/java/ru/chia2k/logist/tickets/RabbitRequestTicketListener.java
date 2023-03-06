@@ -21,36 +21,28 @@ public class RabbitRequestTicketListener {
     private final AmqpProperties properties;
     private final RabbitTemplate rabbitTemplate;
 
-    @RabbitListener(
-            queues = "${spring.rabbitmq.parcel.ticket-request-queue-name:parcel.request.ticket}",
-            id = "ticket.request.listener"
-    )
+    @RabbitListener(queues = "${spring.rabbitmq.parcel.ticket-request-queue-name:parcel.request.ticket}",
+            id = "ticket.request.listener")
     public void receiveRequestTicket(RequestTicketDto request, Message message) {
         var routingKey = message.getMessageProperties().getReplyTo();
         var exchange = properties.getParcelExchangeName();
-
-
 
         log.info("receiveRequestTicket - request received: parcelId = {}, response routing key = {}",
                 request.getParcelId(), message.getMessageProperties().getReplyTo());
 
         try {
             var payload = ticketManager.getTicket(request.getParcelId(),"pdf");
-
             MessageProperties messageProperties = new MessageProperties();
             messageProperties.setCorrelationId(message.getMessageProperties().getCorrelationId());
             messageProperties.setContentType(MessageProperties.CONTENT_TYPE_BYTES);
             messageProperties.setHeader("parcel_id", request.getParcelId());
 
-            Message responseMessage = MessageBuilder.withBody(payload)
-                    .andProperties(messageProperties)
-                    .build();
-
+            var responseMessage = MessageBuilder.withBody(payload).andProperties(messageProperties).build();
             rabbitTemplate.send(exchange, routingKey, responseMessage);
 
             log.info("receiveRequestTicket - response sent: {}", responseMessage.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("{}",e);
         }
     }
 }

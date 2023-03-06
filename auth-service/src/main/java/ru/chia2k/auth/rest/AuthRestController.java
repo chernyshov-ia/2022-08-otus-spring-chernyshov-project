@@ -1,6 +1,7 @@
 package ru.chia2k.auth.rest;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -34,7 +35,7 @@ public class AuthRestController {
     @Operation(summary = "Get new access token", description = "Get new access token")
     @PostMapping("api/v1/token")
     public ResponseEntity<JwtTokenResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
-        final JwtTokenResponse token = authService.getNewAccessToken(request.getRefreshToken());
+        final JwtTokenResponse token = authService.getNewAccessToken(request);
         return ResponseEntity.ok(token);
     }
 
@@ -42,7 +43,7 @@ public class AuthRestController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("api/v1/refresh")
     public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody RefreshJwtRequest request) {
-        final JwtResponse token = authService.refresh(request.getRefreshToken());
+        final JwtResponse token = authService.refresh(request);
         return ResponseEntity.ok(token);
     }
 

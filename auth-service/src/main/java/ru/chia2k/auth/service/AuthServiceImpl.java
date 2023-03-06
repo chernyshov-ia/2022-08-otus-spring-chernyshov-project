@@ -10,9 +10,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import ru.chia2k.auth.dto.JwtRequest;
 import ru.chia2k.auth.dto.JwtResponse;
 import ru.chia2k.auth.dto.JwtTokenResponse;
+import ru.chia2k.auth.dto.RefreshJwtRequest;
 import ru.chia2k.auth.entity.AppEntity;
 import ru.chia2k.auth.entity.RefreshTokenEntity;
 import ru.chia2k.auth.entity.UserEntity;
@@ -28,6 +30,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Validated
 public class AuthServiceImpl implements AuthService {
     private final Integer refreshTokenLimit;
     private final UserService userService;
@@ -60,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     @RateLimiter(name = "authServiceRateLimiter")
     @Transactional
     @Override
-    public JwtResponse login(@NonNull JwtRequest authRequest) {
+    public JwtResponse login(JwtRequest authRequest) {
         if (!checkApp(authRequest.getApp())) {
             throw new AuthException("Invalid application");
         }
@@ -106,9 +109,9 @@ public class AuthServiceImpl implements AuthService {
     @Bulkhead(name="authServiceBulkhead")
     @Transactional(readOnly = true)
     @Override
-    public JwtTokenResponse getNewAccessToken(@NonNull String refreshToken) {
-        if (jwtProvider.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
+    public JwtTokenResponse getNewAccessToken(RefreshJwtRequest request) {
+        if (jwtProvider.validateRefreshToken(request.getRefreshToken())) {
+            final Claims claims = jwtProvider.getRefreshClaims(request.getRefreshToken());
             final String tokenId = claims.getId();
             final String subject = claims.getSubject();
 
@@ -121,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
 
             var savedRefreshTokenEntity = repository.findById(tokenId);
             if (savedRefreshTokenEntity.isPresent()
-                    && savedRefreshTokenEntity.get().getRefreshToken().equals(refreshToken)) {
+                    && savedRefreshTokenEntity.get().getRefreshToken().equals(request.getRefreshToken())) {
 
                 final UserEntity user = userService.getByAccountNumber(accountNumber)
                         .orElseThrow(() -> new AuthException("Invalid token"));
@@ -143,9 +146,9 @@ public class AuthServiceImpl implements AuthService {
     @RateLimiter(name = "authServiceRateLimiter")
     @Transactional
     @Override
-    public JwtResponse refresh(@NonNull String currentRefreshToken) {
-        if (jwtProvider.validateRefreshToken(currentRefreshToken)) {
-            final Claims currentRefreshClaims = jwtProvider.getRefreshClaims(currentRefreshToken);
+    public JwtResponse refresh(RefreshJwtRequest request) {
+        if (jwtProvider.validateRefreshToken(request.getRefreshToken())) {
+            final Claims currentRefreshClaims = jwtProvider.getRefreshClaims(request.getRefreshToken());
             final String tokenId = currentRefreshClaims.getId();
             final String subject = currentRefreshClaims.getSubject();
 
@@ -159,7 +162,7 @@ public class AuthServiceImpl implements AuthService {
             var savedRefreshTokenEntity = repository.findById(tokenId)
                     .orElseThrow(() -> new AuthException("Invalid token"));
 
-            if (savedRefreshTokenEntity.getRefreshToken().equals(currentRefreshToken)) {
+            if (savedRefreshTokenEntity.getRefreshToken().equals(request.getRefreshToken())) {
                 final UserEntity user = userService.getByAccountNumber(accountNumber)
                         .orElseThrow(() -> new AuthException("Invalid token"));
 
