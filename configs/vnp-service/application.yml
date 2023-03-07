@@ -1,0 +1,76 @@
+application:
+  jwt:
+    secret:
+      access: "{cipher}faa58bd74c24525535b74651a61a715445e29b33e57a04d14e879865b4d8844b1c7f671660ba182ab2f11b95daef0e5f4295c4b3d40f72f8a5445b1f7fa37084df92389b33f30a0b809a0f73977fc14779b89bce9dba56e0ae51f6b4f35ef393072f308c78a15ff95282c8c3156352b3"
+
+server:
+  port: 8083
+
+spring:
+  flyway:
+    enabled: true
+  datasource:
+    url: "jdbc:postgresql://localhost:5434/vnp"
+    password: "{cipher}3e26fb500892ec6cb6255292beb47a1d393a905b5a2d557492ff857dabfed74b"
+    username: "{cipher}3e26fb500892ec6cb6255292beb47a1d393a905b5a2d557492ff857dabfed74b"
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  rabbitmq:
+    host: localhost
+    username: "{cipher}ccf65aee7f35dc59a06635e5a62a8f272ba5c07cc62c5201e21b379ed2ceaa62"
+    password: "{cipher}47256e6530dd2cbccc3068eff2d76f4a3f5335cc1581bd70cb87f5447c9f4ea3"
+    port: 5672
+  application:
+    name: vnp-service
+  mail:
+    from: che.robot@yandex.ru
+    host: smtp.yandex.ru
+    port: 587
+    username: che.robot
+    password: emnpyvngeugtnmaa
+    protocol: smtp
+    properties:
+      "mail.transport.protocol": smtp
+      "mail.smtp.auth": true
+      "mail.smtp.starttls.enable": true
+
+logging:
+  file:
+    name: "vnp.log"
+  level:
+    org.springframework.web: TRACE
+    ru.chia2k: trace
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      external-file: "vnp.log"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true

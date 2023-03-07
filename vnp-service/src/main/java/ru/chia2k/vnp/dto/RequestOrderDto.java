@@ -1,0 +1,49 @@
+package ru.chia2k.vnp.dto;
+
+import jakarta.validation.constraints.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
+
+@Getter
+@RequiredArgsConstructor
+@Builder
+public class RequestOrderDto {
+    @NotBlank(message = "Номер пломбы или номер сейф-пакета должен быть указан")
+    @Size(min = 6, max = 13, message = "Размер пломбы ограничен от 6 до 13 символов")
+    private final String seal;
+
+    @NotBlank(message = "Отправитель у посылки должен быть указан")
+    @Size(min = 4, max = 10, message = "Код адреса может быть длинной 4-10 символов")
+    private final String senderId;
+
+    @NotBlank(message = "Получатель у посылки должен быть указан")
+    @Size(min = 4, max = 10, message = "Код адреса может быть длинной 4-10 символов")
+    private final String recipientId;
+
+    @NotNull(message = "Категория груза должна быть указана")
+    private final Integer cargoCategoryId;
+    private final OrderRecipientPersonDto recipientPerson;
+
+    @NotBlank(message = "Для посылки требуется описание(содержимое, получатель, кабинет, контактная информация)")
+    @Size(min = 5, max = 256, message = "Описание не может быть длиннее 256 знаков и короче 5 знаков")
+    private final String description;
+    private final String userCommentText;
+
+    @NotNull(message = "Объем посылки должен быть указан")
+    @DecimalMax(value = "1000.0", message = "Объем не может быть больше 1000 литров(~ 1 паллета)")
+    @DecimalMin(value = "0.1", message = "Объем не может быть меньше 0.1 литра")
+    private final BigDecimal volume;
+
+    @NotNull(message = "Вес посылки долежн быть указан")
+    @DecimalMax(value = "100.0", message = "Вес посылки не может быть больше 30 кг")
+    @DecimalMin(value = "0.05", message = "Вес посылки не может быть меньше 50 грамм")
+    private final BigDecimal weight;
+
+    @NotNull(message = "Объявленная ценнсость посылки долежна быть указана")
+    @DecimalMax(value = "100000.0", message = "Объевленная ценность посылки не может быть больше 100000")
+    @DecimalMin(value = "0", message = "Вес посылки не может быть меньше 0")
+    private final BigDecimal value;
+}
