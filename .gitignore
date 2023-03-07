@@ -30,3 +30,5 @@ hs_err_pid*
 target/
 /docker/grafana/*
 /docker/prometheus/*
+!/docker/grafana/readme.txt
+!/docker/prometheus/readme.txt
